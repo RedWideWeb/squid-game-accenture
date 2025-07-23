@@ -7,7 +7,8 @@ const ASSETS = [
   './sounds/doll_green_light.mp3',
   './sounds/doll_red_light.mp3',
   './sounds/round_and_round.mp3',
-  './sounds/pink_soldiers.mp3'
+  './sounds/pink_soldiers.mp3',
+  './sounds/way_back_then.mp3'
 ];
 
 /* Install: grab everything now */
