@@ -408,19 +408,19 @@
         if (remote) return resolve(remote);
 
         // 2) Hand‑picked favourites by brand / OS
-        // const preferredNames = [
-        //   // Google TTS on Chrome / Android
-        //   /^Google .* English/i,
-        //   // Microsoft Neural voices on Windows / Edge
-        //   /^Microsoft (Jenny|Aria|Guy).* Online/i,
-        //   /^Microsoft .* English/i,
-        //   // Apple high‑quality voices on macOS / iOS
-        //   /^(Samantha)$/i
-        // ];
-        // for (const rx of preferredNames) {
-        //   const v = all.find(v => rx.test(v.name) && v.lang.startsWith(primary));
-        //   if (v) return resolve(v);
-        // }
+        const preferredNames = [
+          // Google TTS on Chrome / Android
+          /^Google .* English/i,
+          // Microsoft Neural voices on Windows / Edge
+          /^Microsoft (Jenny|Aria|Guy).* Online/i,
+          /^Microsoft .* English/i,
+          // Apple high‑quality voices on macOS / iOS
+          /^(Samantha|Саманта)$/i
+        ];
+        for (const rx of preferredNames) {
+          const v = all.find(v => rx.test(v.name) && v.lang.startsWith(primary));
+          if (v) return resolve(v);
+        }
 
         // 3) Browser‑flagged default for the exact language
         const langDefault = all.find(v => v.default && v.lang.startsWith(lang));
