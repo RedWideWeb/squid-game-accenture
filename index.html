@@ -4,6 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Squid Game Accenture Edition</title>
+
+    <link rel="preload" as="audio" href="sounds/Doll Green Light.mp3">
+    <link rel="preload" as="audio" href="sounds/Doll Red Light.mp3">
+    <link rel="preload" as="audio" href="sounds/Round and Round.mp3">
+    <link rel="preload" as="audio" href="sounds/Pink Soldiers.mp3">
+    <link rel="preload" as="audio" href="sounds/Way Back then.mp3">
+
     <style>
         :root{
             --circle-size: 7.5rem;
@@ -62,7 +69,7 @@
         button::before{/* glossy highlight */
             content:"";
             position:absolute;
-            inset: 10% 14% auto 14%;
+            inset: 10% 20% auto 20%;
             height: 30%;
             border-radius:inherit;
             background:var(--shine);
@@ -97,52 +104,59 @@
     </style>
 </head>
 <body>
-    <img src="squid_game_logo.png" alt="Squid Game Logo" class="logo">
+<img src="squid_game_logo.png" alt="Squid Game Logo" class="logo">
 
-    <h1>Squid Game Accenture Edition</h1>
+<h1>Squid Game Accenture Edition</h1>
 
-    <div class="row">
-        <button id="redBtn"    class="circle red"></button>
-        <button id="greenBtn"  class="circle green"></button>
-    </div>
-    <div class="row">
-        <button id="roundAndRound" class="pill orange">Round and Round</button>
-        <button id="pinkSoldiers" class="pill purple">Pink Soldiers</button>
-        <button id="wayBack" class="pill blue">Way Back Then</button>
-    </div>
+<div class="row">
+    <button id="redBtn"    class="circle red"></button>
+    <button id="greenBtn"  class="circle green"></button>
+</div>
+<div class="row">
+    <button id="roundAndRound" class="pill orange">Round and Round</button>
+    <button id="pinkSoldiers" class="pill purple">Pink Soldiers</button>
+    <button id="wayBack" class="pill blue">Way Back Then</button>
+</div>
 
-    <script>
-      /* preload all sounds */
-      const sounds = {
-        greenLight    : new Audio('sounds/Doll Green Light.mp3'),
-        redLight      : new Audio('sounds/Doll Red Light.mp3'),
-        roundAndRound : new Audio('sounds/Round and Round.mp3'),
-        pinkSoldiers  : new Audio('sounds/Pink Soldiers.mp3'),
-        wayBack       : new Audio('sounds/Way Back then.mp3')
-      };
-      /* loop the two music tracks so they act like BGM; tweak if you want one‑shots */
-      sounds.roundAndRound.loop = true;
-      sounds.pinkSoldiers.loop = true;
-      sounds.wayBack.loop = true;
+<script>
+  /* preload all sounds */
+  const sounds = {
+    greenLight    : new Audio('sounds/Doll Green Light.mp3'),
+    redLight      : new Audio('sounds/Doll Red Light.mp3'),
+    roundAndRound : new Audio('sounds/Round and Round.mp3'),
+    pinkSoldiers  : new Audio('sounds/Pink Soldiers.mp3'),
+    wayBack       : new Audio('sounds/Way Back then.mp3')
+  };
+  /* loop the two music tracks so they act like BGM; tweak if you want one‑shots */
+  sounds.roundAndRound.loop = true;
+  sounds.pinkSoldiers.loop = true;
+  sounds.wayBack.loop = true;
 
-      /* stop anything currently playing before starting a new clip */
-      function toggleSound(name){
-        const audio = sounds[name];
-        if (!audio.paused){
-          audio.pause(); audio.currentTime = 0;
-          return;
-        }
-        for (const [key,a] of Object.entries(sounds)){
-          if (key!==name){ a.pause(); a.currentTime = 0; }
-        }
-        audio.play().catch(console.error);
-      }
+  Object.values(sounds).forEach(a=>a.load());
 
-      document.getElementById('greenBtn').addEventListener('click',       () => toggleSound('greenLight'));
-      document.getElementById('redBtn').addEventListener('click',       () => toggleSound('redLight'));
-      document.getElementById('roundAndRound').addEventListener('click',  () => toggleSound('roundAndRound'));
-      document.getElementById('pinkSoldiers').addEventListener('click',   () => toggleSound('pinkSoldiers'));
-      document.getElementById('wayBack').addEventListener('click',        () => toggleSound('wayBack'));
-    </script>
+  /* stop anything currently playing before starting a new clip */
+  function toggleSound(name){
+    const audio = sounds[name];
+    if (!audio.paused){
+      audio.pause(); audio.currentTime = 0;
+      return;
+    }
+    for (const [key,a] of Object.entries(sounds)){
+      if (key!==name){ a.pause(); a.currentTime = 0; }
+    }
+    audio.play().catch(console.error);
+  }
+
+  document.getElementById('greenBtn').addEventListener('click',       () => toggleSound('greenLight'));
+  document.getElementById('redBtn').addEventListener('click',         () => toggleSound('redLight'));
+  document.getElementById('roundAndRound').addEventListener('click',  () => toggleSound('roundAndRound'));
+  document.getElementById('pinkSoldiers').addEventListener('click',   () => toggleSound('pinkSoldiers'));
+  document.getElementById('wayBack').addEventListener('click',        () => toggleSound('wayBack'));
+
+  window.addEventListener('beforeunload',e=>{
+    e.preventDefault();
+    e.returnValue = '';
+  });
+</script>
 </body>
 </html>
