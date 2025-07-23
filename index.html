@@ -228,6 +228,10 @@
     way: new Audio('sounds/way_back_then.mp3')
   };
 
+  let scanTimer = null;
+  const SCAN_PROBABILITY = 0.5;
+  const SCAN_MIN = 1.5;
+
   sounds.round.loop = sounds.pink.loop = sounds.way.loop = true;
 
   Object.values(sounds).forEach(a => a.load());
@@ -291,23 +295,62 @@
     setState('red');
   }
 
+  function playScanRandom() {
+    const scan = sounds.scan;
+    if (!scan) return setState('red');
+
+    stopAll();
+    currentMusic = 'scan';
+    setState('green');
+
+    // Wait for metadata so we know the full duration; fall back to 8 s if unknown
+    const dur = (scan.duration && !isNaN(scan.duration)) ? scan.duration : 5;
+    const slice = Math.random() * (dur - SCAN_MIN) + SCAN_MIN;
+
+    scan.play().catch(console.error);
+
+    // stop after the slice OR when the file ends naturally, whichever comes first
+    scanTimer = setTimeout(() => {
+      scan.pause();
+      scan.currentTime = 0;
+      scanTimer = null;
+      setState('red');
+      currentMusic = null;
+    }, slice * 1000);
+
+    scan.onended = () => {
+      if (scanTimer) { 
+        clearTimeout(scanTimer); 
+        scanTimer = null; 
+      }
+      currentMusic = null;
+      setState('red');
+    };
+  }
+
   function playDollMusic(key) {
     stopAll();
     currentMusic = key;
+
     const track = sounds[key];
     setRatePreservePitch(track, randomRate());
     setState('green');
+
     track.onended = () => {
-      currentMusic = 'scan';
+      currentMusic = null;
       setRatePreservePitch(track, 1);
 
-      const scan = sounds.scan;
-      stopAll();
-      scan.play();
-      scan.onended = () => setState('red');
+      // ──▶ 50 % chance to launch Scan
+      if (Math.random() < SCAN_PROBABILITY) {
+        playScanRandom();
+      } else {
+        setState('red');
+      }
     };
+
     track.play();
   }
+
 
   btn.onclick = () => {
     if (btn.classList.contains('red')) {
@@ -353,16 +396,7 @@
   }
 
   document.querySelectorAll('.num').forEach(btn => {
-    btn.onmousedown = () => {
-      if (e.type === 'touchstart') return;
-      digits = digits.length === 3 ? btn.dataset.digit
-        : digits + btn.dataset.digit;
-      display.textContent = digits;
-      if (digits.length === 3) speak(digits);
-    };
-
-    btn.ontouchstart = () => {
-      if (e.type === 'mousedown') return;
+    btn.onclick = () => {
       digits = digits.length === 3 ? btn.dataset.digit
         : digits + btn.dataset.digit;
       display.textContent = digits;
