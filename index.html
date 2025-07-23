@@ -36,6 +36,7 @@
             font-family: system-ui, sans-serif;
             color: #eee;
             text-align: center;
+            touch-action: manipulation;
         }
 
         h1 {
@@ -319,9 +320,9 @@
     }, slice * 1000);
 
     scan.onended = () => {
-      if (scanTimer) { 
-        clearTimeout(scanTimer); 
-        scanTimer = null; 
+      if (scanTimer) {
+        clearTimeout(scanTimer);
+        scanTimer = null;
       }
       currentMusic = null;
       setState('red');
