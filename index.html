@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -12,21 +12,24 @@
     <link rel="preload" as="audio" href="sounds/doll_green_light.mp3">
     <link rel="preload" as="audio" href="sounds/doll_red_light.mp3">
     <link rel="preload" as="audio" href="sounds/doll_music.mp3">
+    <link rel="preload" as="audio" href="sounds/doll_music_rus.mp3">
+    <link rel="preload" as="audio" href="sounds/scan.mp3">
     <link rel="preload" as="audio" href="sounds/round_and_round.mp3">
     <link rel="preload" as="audio" href="sounds/pink_soldiers.mp3">
     <link rel="preload" as="audio" href="sounds/way_back_then.mp3">
 
     <style>
-        :root{
+        :root {
             --circle-size: 7.5rem;
-            --shine: rgba(255,255,255,.35);
+            --shine: rgba(255, 255, 255, .35);
+            --num-size: 3.5rem;
         }
-        body{
+
+        body {
             margin: 0;
-            height: 100vh;
             display: flex;
             flex-direction: column;
-            justify-content: center;
+            justify-content: start;
             align-items: center;
             gap: 1.25rem;
             background: #FF314F;
@@ -34,12 +37,14 @@
             color: #eee;
             text-align: center;
         }
+
         h1 {
             font-size: clamp(0.75rem, 3.5vw, 1.5rem);
             margin-bottom: .25rem;
         }
 
         .logo {
+            margin-top: 112px;
             width: 55vw;
             max-width: 320px;
             height: auto;
@@ -57,49 +62,114 @@
         }
 
         /* ----- Base button look ----- */
-        button {
-            border:none;
-            cursor:pointer;
-            font-weight:700;
-            font-size:clamp(.85rem,2.8vw,1rem);
-            color:#fff;
-            position:relative;
-            transition:transform .08s ease-out;
-            box-shadow:
-                    inset 0 .25rem .5rem rgba(0,0,0,.6),
-                    0 .5rem 1rem rgba(0,0,0,.6);
+        button.circle, button.pill {
+            border: none;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: clamp(.85rem, 2.8vw, 1rem);
+            color: #fff;
+            position: relative;
+            transition: transform .08s ease-out;
+            box-shadow: inset 0 .25rem .5rem rgba(0, 0, 0, .6),
+            0 .5rem 1rem rgba(0, 0, 0, .6);
         }
 
-        button:active{transform:scale(.93);}
-        button::before{/* glossy highlight */
-            content:"";
-            position:absolute;
+        button.circle:active, button.pill:active {
+            transform: scale(.93);
+        }
+
+        button.circle::before, button.pill::before {
+            content: "";
+            position: absolute;
             inset: 10% 14% auto 14%;
             height: 30%;
-            border-radius:inherit;
-            background:var(--shine);
-            filter:blur(.25rem);
-            opacity:.9;
-            pointer-events:none;
+            border-radius: inherit;
+            background: var(--shine);
+            filter: blur(.25rem);
+            opacity: .9;
+            pointer-events: none;
         }
 
         /* ----- Shape variants ----- */
-        .circle{
-            width:var(--circle-size);
-            height:var(--circle-size);
-            border-radius:50%;
-        }
-        .pill{
-            padding:1rem 2.25rem;
-            border-radius:8px;
-            min-width:8rem;
+        .circle {
+            width: var(--circle-size);
+            height: var(--circle-size);
+            border-radius: 50%;
         }
 
-        .green{background:radial-gradient(circle at 30% 30%, #3fff3f 0%, #019a01 70%);}
-        .red  {background:radial-gradient(circle at 30% 30%, #ff3c3c 0%, #a00000 70%);}
-        .blue {background:linear-gradient(120deg, #46c8ff 0%, #005b9a 70%);}
-        .purple{background:linear-gradient(120deg, #c180ff 0%, #572d9b 70%);}
-        .orange{background:linear-gradient(120deg, #ffac80 0%, #9b5b2d 70%);}
+        .pill {
+            padding: 1rem 2.25rem;
+            border-radius: 8px;
+            min-width: 8rem;
+        }
+
+
+        .circle-num {
+            width: var(--num-size);
+            height: var(--num-size);
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            border: 2px solid #fffdfd;
+            font-weight: 600;
+            font-size: 1.2rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform .07s ease-out;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+
+        #clr {
+            color: rgba(255, 255, 255, 0.75);
+            border: 2px solid rgba(255, 252, 252, 0.75);
+        }
+
+        .circle-num:active {
+            transform: scale(.9); /* subtle press */
+        }
+
+        .numpad { /* grid uses the new size */
+            display: grid;
+            grid-template-columns:repeat(3, var(--num-size));
+            gap: 1rem;
+            justify-content: center;
+            margin-bottom: 112px;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+
+        .numpad-display {
+            height: 38px;
+            font-size: 2rem;
+            letter-spacing: .1em;
+            min-height: 2.2rem;
+            margin-bottom: .5rem;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+
+        .green {
+            background: radial-gradient(circle at 30% 30%, #3fff3f 0%, #019a01 70%);
+        }
+
+        .red {
+            background: radial-gradient(circle at 30% 30%, #ff3c3c 0%, #a00000 70%);
+        }
+
+        .blue {
+            background: linear-gradient(120deg, #46c8ff 0%, #005b9a 70%);
+        }
+
+        .purple {
+            background: linear-gradient(120deg, #c180ff 0%, #572d9b 70%);
+        }
+
+        .orange {
+            background: linear-gradient(120deg, #ffac80 0%, #9b5b2d 70%);
+        }
 
         @media (min-width: 600px) {
             :root {
@@ -116,93 +186,209 @@
 <div class="row">
     <button id="playBtn" class="circle red"></button>
 </div>
+
+
+<div id="numDisplay" class="numpad-display"></div>
+
+<div class="numpad">
+    <button class="circle-num num" data-digit="1">1</button>
+    <button class="circle-num num" data-digit="2">2</button>
+    <button class="circle-num num" data-digit="3">3</button>
+
+    <button class="circle-num num" data-digit="4">4</button>
+    <button class="circle-num num" data-digit="5">5</button>
+    <button class="circle-num num" data-digit="6">6</button>
+
+    <button class="circle-num num" data-digit="7">7</button>
+    <button class="circle-num num" data-digit="8">8</button>
+    <button class="circle-num num" data-digit="9">9</button>
+
+    <span></span>
+    <button class="circle-num num" data-digit="0">0</button>
+    <button class="circle-num" id="clr">X</button>
+</div>
+
+
 <div class="row">
     <button id="roundAndRound" class="pill orange">Round and Round</button>
     <button id="pinkSoldiers" class="pill purple">Pink Soldiers</button>
     <button id="wayBack" class="pill blue">Way Back Then</button>
 </div>
 
-<div class="row">
-    <button id="ttsBtn" class="pill purple">Player 324 eliminated</button>
-</div>
-
 <script>
-  /* preload all sounds */
+
   const sounds = {
-    greenLight    : new Audio('sounds/doll_green_light.mp3'),
-    redLight      : new Audio('sounds/doll_red_light.mp3'),
-    dollMusic     : new Audio('sounds/doll_music.mp3'),
-    roundAndRound : new Audio('sounds/round_and_round.mp3'),
-    pinkSoldiers  : new Audio('sounds/pink_soldiers.mp3'),
-    wayBack       : new Audio('sounds/way_back_then.mp3')
+    greenLight: new Audio('sounds/doll_green_light.mp3'),
+    redLight: new Audio('sounds/doll_red_light.mp3'),
+    dollMusic: new Audio('sounds/doll_music.mp3'),
+    dollMusicRus: new Audio('sounds/doll_music_rus.mp3'),
+    scan: new Audio('sounds/scan.mp3'),
+    round: new Audio('sounds/round_and_round.mp3'),
+    pink: new Audio('sounds/pink_soldiers.mp3'),
+    way: new Audio('sounds/way_back_then.mp3')
   };
-  /* loop the two music tracks so they act like BGM; tweak if you want one‑shots */
-  sounds.roundAndRound.loop = true;
-  sounds.pinkSoldiers.loop = true;
-  sounds.wayBack.loop = true;
+
+  sounds.round.loop = sounds.pink.loop = sounds.way.loop = true;
 
   Object.values(sounds).forEach(a => a.load());
 
-  /* stop anything currently playing before starting a new clip */
-  function toggleSound(name){
+  function toggleSound(name) {
     const audio = sounds[name];
-    if (!audio.paused){
-      audio.pause(); audio.currentTime = 0;
+    if (!audio.paused) {
+      audio.pause();
+      audio.currentTime = 0;
       return;
     }
-    for (const [key,a] of Object.entries(sounds)){
-      if (key!==name){ a.pause(); a.currentTime = 0; }
+    for (const [key, a] of Object.entries(sounds)) {
+      if (key !== name) {
+        a.pause();
+        a.currentTime = 0;
+      }
     }
     audio.play().catch(console.error);
   }
 
-  const playBtn = document.getElementById('playBtn');
+  function stopAll() {
+    for (const a of Object.values(sounds)) {
+      a.pause();
+      a.currentTime = 0;
+    }
+    speechSynthesis.cancel();
+  }
+
+  function randomRate() {
+    return 1 + Math.random() * 0.8;
+  }
+
+  function setRatePreservePitch(audio, rate) {
+    console.log(rate);
+    audio.playbackRate = rate;
+    audio.preservesPitch = audio.webkitPreservesPitch = audio.mozPreservesPitch = true;
+  }
+
+  const btn = document.getElementById('playBtn');
   let timerId = null;
+  let currentMusic = null;
 
-  function setState (state) {
-    playBtn.classList.toggle('red',   state === 'red');
-    playBtn.classList.toggle('green', state === 'green');
+  function setState(col) {
+    btn.classList.toggle('red', col === 'red');
+    btn.classList.toggle('green', col === 'green');
   }
 
-  function start(){
-    if (timerId) clearTimeout(timerId);
-    toggleSound('greenLight');
+  function startGreenPhase() {
+    stopAll();
     setState('green');
-
-    const delay = 1000 + Math.random() * 6000;
-    timerId = setTimeout(endGreen, delay);
+    sounds.greenLight.play();
+    const delay = 1300 + Math.random() * 4700;
+    timerId = setTimeout(endGreenPhase, delay);
   }
 
-  function endGreen(){
-    if (timerId){ clearTimeout(timerId); timerId = null; }
-    toggleSound('redLight');
+  function endGreenPhase() {
+    clearTimeout(timerId);
+    timerId = null;
+    stopAll();
+    sounds.redLight.play();
     setState('red');
   }
 
-  playBtn.addEventListener('click', ()=> {
-    if (playBtn.classList.contains('red')) {
-      start();
+  function playDollMusic(key) {
+    stopAll();
+    currentMusic = key;
+    const track = sounds[key];
+    setRatePreservePitch(track, randomRate());
+    setState('green');
+    track.onended = () => {
+      currentMusic = 'scan';
+      setRatePreservePitch(track, 1);
+
+      const scan = sounds.scan;
+      stopAll();
+      scan.play();
+      scan.onended = () => setState('red');
+    };
+    track.play();
+  }
+
+  btn.onclick = () => {
+    if (btn.classList.contains('red')) {
+      const rnd = Math.floor(Math.random() * 3);
+      if (rnd === 0) {
+        startGreenPhase()
+      }
+      else if (rnd === 1) {
+        playDollMusic('dollMusic')
+      }
+      else {
+        playDollMusic('dollMusicRus')
+      }
     } else {
-      endGreen();
+      if (timerId) endGreenPhase();
+      if (currentMusic) {
+        sounds[currentMusic].pause();
+        sounds[currentMusic].currentTime = 0;
+        currentMusic = null;
+        setState('red');
+      }
     }
+  };
+
+  const display = document.getElementById('numDisplay');
+  let digits = '';
+
+  function tweakNumberToken(token) {
+    let num = token.replace(/^0+/, "");
+    if (num === "") num = "0";
+
+    if (/^\d{3}$/.test(num)) {
+      num = num[0] + " " + num.slice(1);
+    }
+
+    return num.replace(/0/g, "O");
+  }
+
+  function speak(txt) {
+    txt = tweakNumberToken(txt);
+    speechSynthesis.cancel();
+    speechSynthesis.speak(new SpeechSynthesisUtterance(`Player:  ${txt}...... Eliminated`));
+  }
+
+  document.querySelectorAll('.num').forEach(btn => {
+    btn.onmousedown = () => {
+      digits = digits.length === 3 ? btn.dataset.digit
+        : digits + btn.dataset.digit;
+      display.textContent = digits;
+      if (digits.length === 3) speak(digits);
+    };
+
+    btn.ontouchstart = () => {
+      digits = digits.length === 3 ? btn.dataset.digit
+        : digits + btn.dataset.digit;
+      display.textContent = digits;
+      if (digits.length === 3) speak(digits);
+    };
   });
 
-  document.getElementById('roundAndRound').addEventListener('click',  () => toggleSound('roundAndRound'));
-  document.getElementById('pinkSoldiers').addEventListener('click',   () => toggleSound('pinkSoldiers'));
-  document.getElementById('wayBack').addEventListener('click',        () => toggleSound('wayBack'));
+  document.getElementById('clr').onclick = () => {
+    digits = '';
+    display.textContent = '';
+  };
+  display.onclick = () => {
+    if (digits.length === 3) speak(digits);
+  };
 
-  document.getElementById('ttsBtn').addEventListener('click', ()=>{
-    speechSynthesis.speak(new SpeechSynthesisUtterance(`Player: ${Math.floor(Math.random() * (456 - 1 + 1) + 1)}...... Eliminated`));
+  document.getElementById('roundAndRound').addEventListener('click', () => {
+    toggleSound('round');
+  });
+  document.getElementById('pinkSoldiers').addEventListener('click', () => {
+    toggleSound('pink');
+  });
+  document.getElementById('wayBack').addEventListener('click', () => {
+    toggleSound('way')
   });
 
-  window.addEventListener('beforeunload',e=>{
-    e.preventDefault();
-    e.returnValue = '';
-  });
-
-  if('serviceWorker' in navigator){
+  if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('service-worker.js')
-      .catch(err=>console.error('SW register failed:',err));
+      .catch(err => console.error('SW register failed:', err));
   }
 </script>
 </body>
