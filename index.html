@@ -373,8 +373,7 @@
     } else {
       if (timerId) endGreenPhase();
       if (currentMusic) {
-        sounds[currentMusic].pause();
-        sounds[currentMusic].currentTime = 0;
+        stopAll();
         currentMusic = null;
         setState('red');
       }
