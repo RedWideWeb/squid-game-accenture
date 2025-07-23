@@ -1,5 +1,5 @@
 /* A super‑simple “cache‑first” SW */
-const CACHE_NAME = 'sg-accenture-v1';
+const CACHE_NAME = 'sg-accenture-v2';
 const ASSETS = [
   './',
   './index.html',
