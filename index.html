@@ -258,7 +258,7 @@
       clearTimeout(scanTimer);
       scanTimer = null;
     }
-    
+
     for (const a of Object.values(sounds)) {
       a.pause();
       a.currentTime = 0;
@@ -394,10 +394,59 @@
     return num.replace(/0/g, "O");
   }
 
-  function speak(txt) {
+  function chooseBestVoice(lang = 'en-US') {
+    return new Promise(resolve => {
+      // wait until voices are available (Safari often needs this)
+      const load = () => {
+        const all = speechSynthesis.getVoices();
+        if (!all.length) return setTimeout(load, 50);
+
+        const primary = lang.split('-')[0];
+
+        // 1) Remote voices (most natural in Chrome/Edge & Android)
+        const remote = all.find(v => !v.localService && v.lang.startsWith(lang));
+        if (remote) return resolve(remote);
+
+        // 2) Hand‑picked favourites by brand / OS
+        const preferredNames = [
+          // Google TTS on Chrome / Android
+          /^Google .* English/i,
+          // Microsoft Neural voices on Windows / Edge
+          /^Microsoft (Jenny|Aria|Guy).* Online/i,
+          /^Microsoft .* English/i,
+          // Apple high‑quality voices on macOS / iOS
+          /^(Samantha)$/i
+        ];
+        for (const rx of preferredNames) {
+          const v = all.find(v => rx.test(v.name) && v.lang.startsWith(primary));
+          if (v) return resolve(v);
+        }
+
+        // 3) Browser‑flagged default for the exact language
+        const langDefault = all.find(v => v.default && v.lang.startsWith(lang));
+        if (langDefault) return resolve(langDefault);
+
+        // 4) Any voice for the same primary language (en‑*)
+        const samePrimary = all.find(v => v.lang.startsWith(primary));
+        if (samePrimary) return resolve(samePrimary);
+
+        // 5) Give up – let the browser decide
+        resolve(null);
+      };
+      load();
+    });
+  }
+
+  async function speak(txt) {
     txt = tweakNumberToken(txt);
+
+    const u = new SpeechSynthesisUtterance(`Player:  ${txt}...... Eliminated`);
+
+    if (!speak._voice) speak._voice = await chooseBestVoice('en-US');
+    if (speak._voice) utter.voice = speak._voice;
+
     speechSynthesis.cancel();
-    speechSynthesis.speak(new SpeechSynthesisUtterance(`Player:  ${txt}...... Eliminated`));
+    speechSynthesis.speak(utter);
   }
 
   document.querySelectorAll('.num').forEach(btn => {
