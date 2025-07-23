@@ -354,6 +354,7 @@
 
   document.querySelectorAll('.num').forEach(btn => {
     btn.onmousedown = () => {
+      if (e.type === 'touchstart') return;
       digits = digits.length === 3 ? btn.dataset.digit
         : digits + btn.dataset.digit;
       display.textContent = digits;
@@ -361,6 +362,7 @@
     };
 
     btn.ontouchstart = () => {
+      if (e.type === 'mousedown') return;
       digits = digits.length === 3 ? btn.dataset.digit
         : digits + btn.dataset.digit;
       display.textContent = digits;
