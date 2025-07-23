@@ -9,11 +9,12 @@
 
     <title>Squid Game Accenture Edition</title>
 
-    <link rel="preload" as="audio" href="sounds/Doll Green Light.mp3">
-    <link rel="preload" as="audio" href="sounds/Doll Red Light.mp3">
-    <link rel="preload" as="audio" href="sounds/Round and Round.mp3">
-    <link rel="preload" as="audio" href="sounds/Pink Soldiers.mp3">
-    <link rel="preload" as="audio" href="sounds/Way Back then.mp3">
+    <link rel="preload" as="audio" href="sounds/doll_green_light.mp3">
+    <link rel="preload" as="audio" href="sounds/doll_red_light.mp3">
+    <link rel="preload" as="audio" href="sounds/doll_music.mp3">
+    <link rel="preload" as="audio" href="sounds/round_and_round.mp3">
+    <link rel="preload" as="audio" href="sounds/pink_soldiers.mp3">
+    <link rel="preload" as="audio" href="sounds/way_back_then.mp3">
 
     <style>
         :root{
@@ -125,11 +126,12 @@
 <script>
   /* preload all sounds */
   const sounds = {
-    greenLight    : new Audio('sounds/Doll Green Light.mp3'),
-    redLight      : new Audio('sounds/Doll Red Light.mp3'),
-    roundAndRound : new Audio('sounds/Round and Round.mp3'),
-    pinkSoldiers  : new Audio('sounds/Pink Soldiers.mp3'),
-    wayBack       : new Audio('sounds/Way Back then.mp3')
+    greenLight    : new Audio('sounds/doll_green_light.mp3'),
+    redLight      : new Audio('sounds/doll_red_light.mp3'),
+    dollMusic     : new Audio('sounds/doll_music.mp3'),
+    roundAndRound : new Audio('sounds/round_and_round.mp3'),
+    pinkSoldiers  : new Audio('sounds/pink_soldiers.mp3'),
+    wayBack       : new Audio('sounds/way_back_then.mp3')
   };
   /* loop the two music tracks so they act like BGM; tweak if you want one‑shots */
   sounds.roundAndRound.loop = true;
@@ -164,7 +166,7 @@
 
   if('serviceWorker' in navigator){
     navigator.serviceWorker.register('service-worker.js')
-      .catch(err=>console.error('SW register failed:',err));
+      .catch(err=>console.error('SW register failed:',err));
   }
 </script>
 </body>
