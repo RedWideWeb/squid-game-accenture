@@ -114,13 +114,16 @@
 <h1>Squid Game Accenture Edition</h1>
 
 <div class="row">
-    <button id="redBtn"    class="circle red"></button>
-    <button id="greenBtn"  class="circle green"></button>
+    <button id="playBtn" class="circle red"></button>
 </div>
 <div class="row">
     <button id="roundAndRound" class="pill orange">Round and Round</button>
     <button id="pinkSoldiers" class="pill purple">Pink Soldiers</button>
     <button id="wayBack" class="pill blue">Way Back Then</button>
+</div>
+
+<div class="row">
+    <button id="ttsBtn" class="pill purple">Player 324 eliminated</button>
 </div>
 
 <script>
@@ -138,7 +141,7 @@
   sounds.pinkSoldiers.loop = true;
   sounds.wayBack.loop = true;
 
-  Object.values(sounds).forEach(a=>a.load());
+  Object.values(sounds).forEach(a => a.load());
 
   /* stop anything currently playing before starting a new clip */
   function toggleSound(name){
@@ -153,11 +156,44 @@
     audio.play().catch(console.error);
   }
 
-  document.getElementById('greenBtn').addEventListener('click',       () => toggleSound('greenLight'));
-  document.getElementById('redBtn').addEventListener('click',         () => toggleSound('redLight'));
+  const playBtn = document.getElementById('playBtn');
+  let timerId = null;
+
+  function setState (state) {
+    playBtn.classList.toggle('red',   state === 'red');
+    playBtn.classList.toggle('green', state === 'green');
+  }
+
+  function start(){
+    if (timerId) clearTimeout(timerId);
+    toggleSound('greenLight');
+    setState('green');
+
+    const delay = 1000 + Math.random() * 6000;
+    timerId = setTimeout(endGreen, delay);
+  }
+
+  function endGreen(){
+    if (timerId){ clearTimeout(timerId); timerId = null; }
+    toggleSound('redLight');
+    setState('red');
+  }
+
+  playBtn.addEventListener('click', ()=> {
+    if (playBtn.classList.contains('red')) {
+      start();
+    } else {
+      endGreen();
+    }
+  });
+
   document.getElementById('roundAndRound').addEventListener('click',  () => toggleSound('roundAndRound'));
   document.getElementById('pinkSoldiers').addEventListener('click',   () => toggleSound('pinkSoldiers'));
   document.getElementById('wayBack').addEventListener('click',        () => toggleSound('wayBack'));
+
+  document.getElementById('ttsBtn').addEventListener('click', ()=>{
+    speechSynthesis.speak(new SpeechSynthesisUtterance(`Player: ${Math.floor(Math.random() * (456 - 1 + 1) + 1)}...... Eliminated`));
+  });
 
   window.addEventListener('beforeunload',e=>{
     e.preventDefault();
