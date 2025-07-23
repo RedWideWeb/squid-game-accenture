@@ -254,6 +254,11 @@
   }
 
   function stopAll() {
+    if (scanTimer) {
+      clearTimeout(scanTimer);
+      scanTimer = null;
+    }
+    
     for (const a of Object.values(sounds)) {
       a.pause();
       a.currentTime = 0;
