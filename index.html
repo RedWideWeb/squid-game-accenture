@@ -162,25 +162,6 @@
     e.returnValue = '';
   });
 
-  (function blockPullToRefreshIOS(){
-    const isiOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-    if(!isiOS) return;
-    let startY=0, maybePull=false;
-    window.addEventListener('touchstart',e=>{
-      if(window.pageYOffset===0){
-        startY=e.touches[0].clientY;
-        maybePull=true;
-      }
-    },{passive:false});
-    window.addEventListener('touchmove',e=>{
-      const y=e.touches[0].clientY;
-      if(maybePull && y>startY){   // pulling down
-        e.preventDefault();        // stop the overscroll bounce
-      }
-      if(y<=startY){maybePull=false;}
-    },{passive:false});
-  })();
-
   if('serviceWorker' in navigator){
     navigator.serviceWorker.register('service-worker.js')
       .catch(err=>console.error('SW register failed:',err));
