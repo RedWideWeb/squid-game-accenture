@@ -3,6 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
     <title>Squid Game Accenture Edition</title>
 
     <link rel="preload" as="audio" href="sounds/Doll Green Light.mp3">
@@ -30,7 +34,7 @@
             text-align: center;
         }
         h1 {
-            font-size: clamp(1.3rem, 3vw, 2rem);
+            font-size: clamp(0.75rem, 3.5vw, 1.5rem);
             margin-bottom: .25rem;
         }
 
@@ -69,7 +73,7 @@
         button::before{/* glossy highlight */
             content:"";
             position:absolute;
-            inset: 10% 20% auto 20%;
+            inset: 10% 14% auto 14%;
             height: 30%;
             border-radius:inherit;
             background:var(--shine);
@@ -157,6 +161,30 @@
     e.preventDefault();
     e.returnValue = '';
   });
+
+  (function blockPullToRefreshIOS(){
+    const isiOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+    if(!isiOS) return;
+    let startY=0, maybePull=false;
+    window.addEventListener('touchstart',e=>{
+      if(window.pageYOffset===0){
+        startY=e.touches[0].clientY;
+        maybePull=true;
+      }
+    },{passive:false});
+    window.addEventListener('touchmove',e=>{
+      const y=e.touches[0].clientY;
+      if(maybePull && y>startY){   // pulling down
+        e.preventDefault();        // stop the overscroll bounce
+      }
+      if(y<=startY){maybePull=false;}
+    },{passive:false});
+  })();
+
+  if('serviceWorker' in navigator){
+    navigator.serviceWorker.register('service-worker.js')
+      .catch(err=>console.error('SW register failed:',err));
+  }
 </script>
 </body>
 </html>
