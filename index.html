@@ -443,10 +443,10 @@
     const u = new SpeechSynthesisUtterance(`Player:  ${txt}...... Eliminated`);
 
     if (!speak._voice) speak._voice = await chooseBestVoice('en-US');
-    if (speak._voice) utter.voice = speak._voice;
+    if (speak._voice) u.voice = speak._voice;
 
     speechSynthesis.cancel();
-    speechSynthesis.speak(utter);
+    speechSynthesis.speak(u);
   }
 
   document.querySelectorAll('.num').forEach(btn => {
