@@ -1,13 +1,13 @@
 /* A super‑simple “cache‑first” SW */
 const CACHE_NAME = 'sg-accenture-v1';
 const ASSETS = [
-  '/',
-  '/index.html',
-  '/squid_game_logo.png',
-  '/sounds/Doll Green Light.mp3',
-  '/sounds/Doll Red Light.mp3',
-  '/sounds/Round and Round.mp3',
-  '/sounds/Pink Soldiers.mp3'
+  './',
+  './index.html',
+  './squid_game_logo.png',
+  './sounds/doll_green_light.mp3',
+  './sounds/doll_red_light.mp3',
+  './sounds/round_and_round.mp3',
+  './sounds/pink_soldiers.mp3'
 ];
 
 /* Install: grab everything now */
@@ -31,7 +31,19 @@ self.addEventListener('activate', evt => {
 
 /* Fetch: respond from cache, fallback to network */
 self.addEventListener('fetch', evt => {
+  if (evt.request.method !== 'GET' ||
+    new URL(evt.request.url).origin !== location.origin) return;
+
   evt.respondWith(
-    caches.match(evt.request).then(res => res || fetch(evt.request))
+    caches.match(evt.request, {ignoreSearch: true}).then(hit => {
+      if (hit) return hit;                 // ① served from cache
+      return fetch(evt.request).then(res => { // ② else go network‑first
+        // stash a copy for next time
+        return caches.open(CACHE_NAME).then(c => {
+          c.put(evt.request, res.clone());
+          return res;
+        });
+      });
+    })
   );
 });
