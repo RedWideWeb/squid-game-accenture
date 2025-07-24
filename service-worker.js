@@ -12,6 +12,7 @@ const ASSETS = [
   './sounds/round_and_round.mp3',
   './sounds/pink_soldiers.mp3',
   './sounds/way_back_then.mp3',
+  './sounds/accomplished.mp3',
 ];
 
 /* Install: grab everything now */
@@ -40,8 +41,9 @@ self.addEventListener('fetch', evt => {
 
   evt.respondWith(
     caches.match(evt.request, {ignoreSearch: true}).then(hit => {
-      if (hit) return hit;
-      return fetch(evt.request).then(res => {
+      if (hit) return hit;                 // ① served from cache
+      return fetch(evt.request).then(res => { // ② else go network‑first
+        // stash a copy for next time
         return caches.open(CACHE_NAME).then(c => {
           c.put(evt.request, res.clone());
           return res;
