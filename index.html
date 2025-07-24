@@ -33,7 +33,7 @@
         :root {
             --circle-size: 7.5rem;
             --shine: rgba(255, 255, 255, .35);
-            --num-size: 3.5rem;
+            --num-size: 4.5rem;
         }
 
         body {
@@ -42,7 +42,7 @@
             flex-direction: column;
             justify-content: start;
             align-items: center;
-            gap: 0.75rem;
+            gap: 1.25rem;
             background: #F60078;
             font-family: system-ui, sans-serif;
             color: #eee;
@@ -56,7 +56,7 @@
         }
 
         .logo {
-            margin-top: 32px;
+            margin-top: 64px;
             width: 55vw;
             max-width: 320px;
             height: auto;
@@ -123,9 +123,9 @@
             width: var(--num-size);
             height: var(--num-size);
             border-radius: 50%;
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.3);
             color: #fff;
-            border: 2px solid #fffdfd;
+            border: none;
             font-weight: 600;
             font-size: 1.2rem;
             cursor: pointer;
@@ -139,7 +139,7 @@
 
         #clr {
             color: rgba(255, 255, 255, 0.75);
-            border: 2px solid rgba(255, 252, 252, 0.75);
+            /*border: 2px solid rgba(255, 252, 252, 0.75);*/
         }
 
         .circle-num:active {
@@ -149,7 +149,7 @@
         .numpad {
             display: grid;
             grid-template-columns:repeat(3, var(--num-size));
-            gap: 1rem;
+            gap: 0.5rem;
             justify-content: center;
             margin-bottom: 112px;
             -webkit-user-select: none;
@@ -198,6 +198,19 @@
         @media (min-width: 600px) {
             :root {
                 --btn-size: 8.5rem;
+            }
+        }
+
+
+        @media (prefers-color-scheme: dark) {
+            body {
+                background: #000;
+            }
+            .logo {
+                content: url("squid_game_logo_dark.png");
+            }
+            .circle-num {
+                background: rgba(255, 255, 255, 0.1);
             }
         }
     </style>
