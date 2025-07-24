@@ -1,11 +1,14 @@
 /* A super‑simple “cache‑first” SW */
-const CACHE_NAME = 'sg-accenture-v2';
+const CACHE_NAME = 'sg-accenture-v3';
 const ASSETS = [
   './',
   './index.html',
   './squid_game_logo.png',
   './sounds/doll_green_light.mp3',
   './sounds/doll_red_light.mp3',
+  './sounds/doll_music.mp3',
+  './sounds/doll_music_rus.mp3',
+  './sounds/scan.mp3',
   './sounds/round_and_round.mp3',
   './sounds/pink_soldiers.mp3',
   './sounds/way_back_then.mp3',
@@ -37,9 +40,8 @@ self.addEventListener('fetch', evt => {
 
   evt.respondWith(
     caches.match(evt.request, {ignoreSearch: true}).then(hit => {
-      if (hit) return hit;                 // ① served from cache
-      return fetch(evt.request).then(res => { // ② else go network‑first
-        // stash a copy for next time
+      if (hit) return hit;
+      return fetch(evt.request).then(res => {
         return caches.open(CACHE_NAME).then(c => {
           c.put(evt.request, res.clone());
           return res;
