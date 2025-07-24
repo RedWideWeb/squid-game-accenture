@@ -375,8 +375,7 @@
 
     const track = sounds[key];
     const rate  = randomRate();
-    track.playbackRate = rate;
-    track.preservesPitch = true;
+    setRatePreservePitch(track, rate);
 
     setState('green');
 
@@ -396,18 +395,18 @@
       }
     };
 
-    
+
     track.onended = finish;
     track.onerror = finish;
-    
-    
+
+
     const dur = (track.duration && !isNaN(track.duration)) ? track.duration : 5;
     const safetyTimer = setTimeout(
       finish,
-      (dur / rate * 1000) + 250 
+      (dur / rate * 1000) + 250
     );
 
-    
+
     track.play().catch(err => {
       console.error('play() rejected', err);
       finish();
