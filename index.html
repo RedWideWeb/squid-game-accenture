@@ -264,17 +264,19 @@
   }
 
   function stopAll() {
-    if (scanTimer) {
-      clearTimeout(scanTimer);
-      scanTimer = null;
+    if (scanTimer) { 
+      clearTimeout(scanTimer); 
+      scanTimer = null; 
     }
 
     for (const a of Object.values(sounds)) {
+      a.onended = null;
       a.pause();
       a.currentTime = 0;
     }
     speechSynthesis.cancel();
   }
+
 
   function randomRate() {
     return 1 + Math.random() * 1.5;
@@ -349,14 +351,16 @@
     currentMusic = key;
 
     const track = sounds[key];
-    setRatePreservePitch(track, randomRate());
+    const rate  = randomRate();        // pick it once
+
     setState('green');
 
+    // run this first so it's ready whenever the clip really ends
     track.onended = () => {
       currentMusic = null;
       setRatePreservePitch(track, 1);
 
-      // ──▶ 50 % chance to launch Scan
+      // 75% chance of Scan
       if (Math.random() < SCAN_PROBABILITY) {
         playScanRandom();
       } else {
@@ -364,8 +368,17 @@
       }
     };
 
-    track.play();
+    // Safari/Chrome‑mobile quirk: change playbackRate *after* play() begins
+    track.play()
+      .then(() => setRatePreservePitch(track, rate))
+      .catch(err => {
+        console.error('Could not start audio', err);
+        // roll back UI so users aren’t stuck in green
+        currentMusic = null;
+        setState('red');
+      });
   }
+
 
 
   btn.onclick = () => {
