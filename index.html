@@ -24,6 +24,7 @@
     <link rel="preload" as="audio" href="sounds/round_and_round.mp3">
     <link rel="preload" as="audio" href="sounds/pink_soldiers.mp3">
     <link rel="preload" as="audio" href="sounds/way_back_then.mp3">
+    <link rel="preload" as="audio" href="sounds/accomplished.mp3">
 
     <link rel="manifest" href="manifest.webmanifest">
 
@@ -182,6 +183,10 @@
             background: linear-gradient(120deg, #ffac80 0%, #9b5b2d 70%);
         }
 
+        .grey {
+            background: linear-gradient(120deg, #959595 0%, #5c5c5c 70%);
+        }
+
         @media (min-width: 600px) {
             :root {
                 --btn-size: 8.5rem;
@@ -224,6 +229,7 @@
     <button id="roundAndRound" class="pill orange">Round and Round</button>
     <button id="pinkSoldiers" class="pill purple">Pink Soldiers</button>
     <button id="wayBack" class="pill blue">Way Back Then</button>
+    <button id="accomplished" class="pill grey">Accomplished</button>
 </div>
 
 <script>
@@ -236,7 +242,8 @@
     scan: new Audio('sounds/scan.mp3'),
     round: new Audio('sounds/round_and_round.mp3'),
     pink: new Audio('sounds/pink_soldiers.mp3'),
-    way: new Audio('sounds/way_back_then.mp3')
+    way: new Audio('sounds/way_back_then.mp3'),
+    accomplished: new Audio('sounds/accomplished.mp3')
   };
 
   let scanTimer = null;
@@ -264,9 +271,9 @@
   }
 
   function stopAll() {
-    if (scanTimer) { 
-      clearTimeout(scanTimer); 
-      scanTimer = null; 
+    if (scanTimer) {
+      clearTimeout(scanTimer);
+      scanTimer = null;
     }
 
     for (const a of Object.values(sounds)) {
@@ -497,6 +504,9 @@
   });
   document.getElementById('wayBack').addEventListener('click', () => {
     toggleSound('way')
+  });
+  document.getElementById('accomplished').addEventListener('click', () => {
+    toggleSound('accomplished')
   });
 
   if ('serviceWorker' in navigator) {
