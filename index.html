@@ -70,10 +70,13 @@
             justify-content: center;
             gap: 1rem;
             max-width: 420px;
-            margin-bottom: 40px;
+            margin: 20px;
+        }
+        
+        .row:last-child {
+            margin-bottom: 64px;
         }
 
-        /* ----- Base button look ----- */
         button.circle, button.pill {
             border: none;
             cursor: pointer;
@@ -140,10 +143,10 @@
         }
 
         .circle-num:active {
-            transform: scale(.9); /* subtle press */
+            transform: scale(.9);
         }
 
-        .numpad { /* grid uses the new size */
+        .numpad {
             display: grid;
             grid-template-columns:repeat(3, var(--num-size));
             gap: 1rem;
@@ -250,7 +253,7 @@
   const SCAN_PROBABILITY = 0.75;
   const SCAN_MIN = 3;
 
-  sounds.round.loop = sounds.pink.loop = sounds.way.loop = true;
+  sounds.round.loop = sounds.pink.loop = sounds.way.loop = sounds.accomplished.loop = true;
 
   Object.values(sounds).forEach(a => a.load());
 
