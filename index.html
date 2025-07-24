@@ -441,15 +441,30 @@
   let digits = '';
 
   function tweakNumberToken(token) {
+    // 1 strip leading zeros but keep at least one digit
     let num = token.replace(/^0+/, "");
     if (num === "") num = "0";
 
+    // 2 three‑digit patterns
     if (/^\d{3}$/.test(num)) {
-      num = num[0] + " " + num.slice(1);
+      // a)   d 0 d   → replace middle 0 with “O”, keep spaces around each digit
+      if (/^\d0\d$/.test(num)) {
+        return `${num[0]} O ${num[2]}`;     // e.g. 101 → "1 O 1"
+      }
+
+      // b)   d00     → leave “hundreds” intact (100, 200, 900 ...)
+      if (/^\d00$/.test(num)) {
+        return num;                         // 100 → "100"
+      }
+
+      // c)   any other 3‑digit number → keep the old “first‑digit space rest”
+      return `${num[0]} ${num.slice(1)}`;   // 123 → "1 23"
     }
 
-    return num.replace(/0/g, "O");
+    // 3 all other lengths: return unchanged
+    return num;
   }
+
 
   function chooseBestVoice(lang = 'en-US') {
     return new Promise(resolve => {
