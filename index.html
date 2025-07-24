@@ -277,6 +277,7 @@
   const log = (...x) => console.log('[SQUID]', ...x);
 
   let scanTimer = null;
+  let musicGuardTimer = null;
   const SCAN_PROBABILITY = 0.75;
   const SCAN_MIN = 3;
 
@@ -302,7 +303,9 @@
 
   function stopAll() {
     clearTimeout(scanTimer);
+    clearTimeout(musicGuardTimer);
     scanTimer = null;
+    musicGuardTimer = null;
 
     for (const a of Object.values(sounds)) {
       a.onended = null;
@@ -401,9 +404,10 @@
       if (finish.done) return;
       finish.done = true;
 
-      clearTimeout(safetyTimer);
-      track.onended = track.onerror = null;
+      clearTimeout(musicGuardTimer);
+      musicGuardTimer = null;
       currentMusic = null;
+      track.onended = track.onerror = null;
       setRatePreservePitch(track, 1);
 
       if (Math.random() < SCAN_PROBABILITY) {
@@ -419,7 +423,7 @@
 
 
     const dur = (track.duration && !isNaN(track.duration)) ? track.duration : 5;
-    const safetyTimer = setTimeout(
+    musicGuardTimer = setTimeout(
       finish,
       (dur / rate * 1000) + 250
     );
