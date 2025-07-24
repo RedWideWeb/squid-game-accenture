@@ -72,7 +72,7 @@
             max-width: 420px;
             margin: 20px;
         }
-        
+
         .row:nth-child(6) {
             margin-bottom: 64px;
         }
@@ -249,6 +249,15 @@
     accomplished: new Audio('sounds/accomplished.mp3')
   };
 
+  for (const [name, a] of Object.entries(sounds)) {
+    a.addEventListener('error',   e => console.error('AUDIO error',   name, e));
+    a.addEventListener('stalled', e => console.warn ('AUDIO stalled', name, e));
+    a.addEventListener('pause',   () => console.log ('AUDIO paused',  name));
+    a.addEventListener('play',    () => console.log ('AUDIO play →',  name));
+    a.addEventListener('ended',   () => console.log ('AUDIO ended',   name));
+  }
+  const log = (...x) => console.log('[SQUID]', ...x);
+
   let scanTimer = null;
   const SCAN_PROBABILITY = 0.75;
   const SCAN_MIN = 3;
@@ -274,10 +283,8 @@
   }
 
   function stopAll() {
-    if (scanTimer) {
-      clearTimeout(scanTimer);
-      scanTimer = null;
-    }
+    clearTimeout(scanTimer);
+    scanTimer = null;
 
     for (const a of Object.values(sounds)) {
       a.onended = null;
@@ -318,8 +325,14 @@
   function endGreenPhase() {
     clearTimeout(timerId);
     timerId = null;
-    stopAll();
-    sounds.redLight.play();
+    for (const [key, a] of Object.entries(sounds)) {
+      if (key !== 'redLight') {
+        a.onended = null;
+        a.pause();
+        a.currentTime = 0;
+      }
+    }
+    sounds.redLight.play().catch(console.error);
     setState('red');
   }
 
@@ -361,16 +374,21 @@
     currentMusic = key;
 
     const track = sounds[key];
-    const rate  = randomRate();        // pick it once
+    const rate  = randomRate();
+    track.playbackRate = rate;
+    track.preservesPitch = true;
 
     setState('green');
 
-    // run this first so it's ready whenever the clip really ends
-    track.onended = () => {
+    const finish = () => {
+      if (finish.done) return;
+      finish.done = true;
+
+      clearTimeout(safetyTimer);
+      track.onended = track.onerror = null;
       currentMusic = null;
       setRatePreservePitch(track, 1);
 
-      // 75% chance of Scan
       if (Math.random() < SCAN_PROBABILITY) {
         playScanRandom();
       } else {
@@ -378,15 +396,22 @@
       }
     };
 
-    // Safari/Chrome‑mobile quirk: change playbackRate *after* play() begins
-    track.play()
-      .then(() => setRatePreservePitch(track, rate))
-      .catch(err => {
-        console.error('Could not start audio', err);
-        // roll back UI so users aren’t stuck in green
-        currentMusic = null;
-        setState('red');
-      });
+    
+    track.onended = finish;
+    track.onerror = finish;
+    
+    
+    const dur = (track.duration && !isNaN(track.duration)) ? track.duration : 5;
+    const safetyTimer = setTimeout(
+      finish,
+      (dur / rate * 1000) + 250 
+    );
+
+    
+    track.play().catch(err => {
+      console.error('play() rejected', err);
+      finish();
+    });
   }
 
 
