@@ -447,14 +447,14 @@
 
     // 2 three‑digit patterns
     if (/^\d{3}$/.test(num)) {
-      // a)   d 0 d   → replace middle 0 with “O”, keep spaces around each digit
-      if (/^\d0\d$/.test(num)) {
-        return `${num[0]} O ${num[2]}`;     // e.g. 101 → "1 O 1"
-      }
-
-      // b)   d00     → leave “hundreds” intact (100, 200, 900 ...)
+      // a)   d00     → leave “hundreds” intact (100, 200, 900 ...)
       if (/^\d00$/.test(num)) {
         return num;                         // 100 → "100"
+      }
+      
+      // b)   d 0 d   → replace middle 0 with “O”, keep spaces around each digit
+      if (/^\d0\d$/.test(num)) {
+        return `${num[0]} O ${num[2]}`;     // e.g. 101 → "1 O 1"
       }
 
       // c)   any other 3‑digit number → keep the old “first‑digit space rest”
