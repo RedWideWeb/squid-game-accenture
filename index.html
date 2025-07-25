@@ -298,6 +298,13 @@
         a.currentTime = 0;
       }
     }
+
+    if (name === 'round') {
+      const offsets = [0, 2.2, 9.2];
+      let offset = offsets[Math.floor(Math.random() * offsets.length)];
+      audio.currentTime = offset;
+    }
+
     audio.play().catch(console.error);
   }
 
