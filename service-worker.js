@@ -4,6 +4,7 @@ const ASSETS = [
   './',
   './index.html',
   './squid_game_logo.png',
+  './squid_game_logo_dark.png',
   './sounds/doll_green_light.mp3',
   './sounds/doll_red_light.mp3',
   './sounds/doll_music.mp3',
