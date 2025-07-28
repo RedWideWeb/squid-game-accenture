@@ -541,6 +541,17 @@
     });
   }
 
+  async function playSilenceForRoute() {
+    const ctx   = new AudioContext();
+    const empty = ctx.createBuffer(1, ctx.sampleRate / 20, ctx.sampleRate); // 0.05 s
+    const src   = ctx.createBufferSource();
+    src.buffer  = empty;
+    src.connect(ctx.destination);
+    src.start();
+    await src.onended;      // resolves in 50 ms; enough to open the route
+    ctx.close();
+  }
+
   async function speak(txt) {
     txt = tweakNumberToken(txt);
 
@@ -550,6 +561,7 @@
     if (speak._voice) u.voice = speak._voice;
 
     speechSynthesis.cancel();
+    await playSilenceForRoute();
     speechSynthesis.speak(u);
   }
 
