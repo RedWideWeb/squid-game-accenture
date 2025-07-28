@@ -442,20 +442,23 @@
     });
   }
 
+  const actions = [
+    () => startGreenPhase(),                 // index 0
+    () => playDollMusic('dollMusic'),        // index 1
+    () => playDollMusic('dollMusicRus')      // index 2
+  ];
 
+  let bag = [0, 1, 2];
+
+  function drawNext() {
+    if (bag.length === 0) bag = [0, 1, 2];           // refill after all used
+    const i = Math.floor(Math.random() * bag.length);
+    return bag.splice(i, 1)[0];                      // remove & return one index
+  }
 
   btn.onclick = () => {
     if (btn.classList.contains('red')) {
-      const rnd = Math.floor(Math.random() * 3);
-      if (rnd === 0) {
-        startGreenPhase()
-      }
-      else if (rnd === 1) {
-        playDollMusic('dollMusic')
-      }
-      else {
-        playDollMusic('dollMusicRus')
-      }
+      actions[drawNext()]();                         // play a fresh action
     } else {
       if (timerId) endGreenPhase();
       if (currentMusic) {
